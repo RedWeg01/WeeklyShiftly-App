@@ -354,7 +354,7 @@ useEffect(() => {
       unsubscribeSchedule();
       unsubscribeEmployees();
     };
-  }, [isAuthReady, db, userId, currentWeekMonday, __app_id]); // Added __app_id to dependencies
+ }, [isAuthReady, db, userId, currentWeekMonday]); // Added __app_id to dependencies
 
   // Save data to Firestore whenever weeklySchedule or employees change
   useEffect(() => {
@@ -392,7 +392,7 @@ useEffect(() => {
       clearTimeout(scheduleTimeout);
       clearTimeout(employeesTimeout);
     };
-  }, [weeklySchedule, employees, isAuthReady, db, userId, currentWeekMonday, loading, __app_id]);
+  }, [weeklySchedule, employees, isAuthReady, db, userId, currentWeekMonday, loading]);
 
 
   // Function to add a new employee
