@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection } from 'firebase/firestore';
+const __app_id = "1:260496171368:web:e23b88be4d571db869b6dd";
 // import jsPDF from 'jspdf'; // Removed this import, assuming it's loaded via CDN
 
 // Lucide React Icons (assuming they are available in the environment)
