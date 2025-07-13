@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection } from 'firebase/firestore';
-const __app_id = "1:260496171368:web:e23b88be4d571db869b6dd";
 // import jsPDF from 'jspdf'; // Removed this import, assuming it's loaded via CDN
 
 // Lucide React Icons (assuming they are available in the environment)
@@ -269,43 +268,43 @@ function App() {
   // Initialize Firebase and Auth
 useEffect(() => {
   try {
-    const firebaseConfig = {
-  apiKey: "AIzaSyA1ptaDfdtejd_7mx2QILwrYxjjLp0Z_aI",
-  authDomain: "weeklyshiftly.firebaseapp.com",
-  projectId: "weeklyshiftly",
-  storageBucket: "weeklyshiftly.firebasestorage.app",
-  messagingSenderId: "260496171368",
-  appId: "1:260496171368:web:e23b88be4d571db869b6dd"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyA1ptaDfdtejd_7mx2QILwrYxjjLp0Z_aI",
+    authDomain: "weeklyshiftly.firebaseapp.com",
+    projectId: "weeklyshiftly",
+    storageBucket: "weeklyshiftly.firebasestorage.app",
+    messagingSenderId: "260496171368",
+    appId: "1:260496171368:web:e23b88be4d571db869b6dd"
+  };
 
-        const app = initializeApp(firebaseConfig);
-        const firestore = getFirestore(app);
-        const firebaseAuth = getAuth(app);
+  const app = initializeApp(firebaseConfig);
+  const firestore = getFirestore(app);
+  const firebaseAuth = getAuth(app);
 
-        setDb(firestore);
-        setAuth(firebaseAuth);
+  setDb(firestore);
+  setAuth(firebaseAuth);
 
-        const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
-            if (user) {
-                setUserId(user.uid);
-            } else {
-                try {
-                    const userCredential = await signInAnonymously(firebaseAuth);
-                    setUserId(userCredential.user.uid);
-                } catch (error) {
-                    console.error("Error signing in anonymously:", error);
-                    setMessage({ text: 'Fehler bei der anonymen Anmeldung.', type: 'error' });
-                }
-            }
-            setIsAuthReady(true);
-            setLoading(false);
-        });
+  const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
+      if (user) {
+          setUserId(user.uid);
+      } else {
+          try {
+              const userCredential = await signInAnonymously(firebaseAuth);
+              setUserId(userCredential.user.uid);
+          } catch (error) {
+              console.error("Error signing in anonymously:", error);
+              setMessage({ text: 'Fehler bei der anonymen Anmeldung.', type: 'error' });
+          }
+      }
+      setIsAuthReady(true);
+      setLoading(false);
+  });
 
-        return () => unsubscribe();
-    } catch (error) {
+  return () => unsubscribe();
+  } catch (error) {
         console.error("Firebase initialization failed:", error);
-        setMessage({ text: 'Fehler beim Initialisieren der Datenbank. Bitte versuchen Sie es später erneut.', type: 'error' });
-        setLoading(false);
+    setMessage({ text: 'Fehler beim Initialisieren der Datenbank. Bitte versuchen Sie es später erneut.', type: 'error' });
+  setLoading(false);
     }
 }, []);
 
