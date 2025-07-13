@@ -277,44 +277,37 @@ useEffect(() => {
   appId: "1:260496171368:web:e23b88be4d571db869b6dd"
 };
 
-    const app = initializeApp(firebaseConfig);
-      const firestore = getFirestore(app);
-      const firebaseAuth = getAuth(app);
+        const app = initializeApp(firebaseConfig);
+        const firestore = getFirestore(app);
+        const firebaseAuth = getAuth(app);
 
-      setDb(firestore);
-      setAuth(firebaseAuth);
+        setDb(firestore);
+        setAuth(firebaseAuth);
 
-      const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
-        if (user) {
-          setUserId(user.uid);
-        } else {
-          // Sign in anonymously if no custom token is provided
-          if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-            try {
-              await signInWithCustomToken(firebaseAuth, __initial_auth_token);
-              setUserId(firebaseAuth.currentUser?.uid || crypto.randomUUID()); // Ensure userId is set
-            } catch (error) {
-              console.error("Error signing in with custom token:", error);
-              // Fallback to anonymous if custom token fails
-              await signInAnonymously(firebaseAuth);
-              setUserId(firebaseAuth.currentUser?.uid || crypto.randomUUID());
+        const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
+            if (user) {
+                setUserId(user.uid);
+            } else {
+                try {
+                    const userCredential = await signInAnonymously(firebaseAuth);
+                    setUserId(userCredential.user.uid);
+                } catch (error) {
+                    console.error("Error signing in anonymously:", error);
+                    setMessage({ text: 'Fehler bei der anonymen Anmeldung.', type: 'error' });
+                }
             }
-          } else {
-            await signInAnonymously(firebaseAuth);
-            setUserId(firebaseAuth.currentUser?.uid || crypto.randomUUID());
-          }
-        }
-        setIsAuthReady(true);
-        setLoading(false);
-      });
+            setIsAuthReady(true);
+            setLoading(false);
+        });
 
-      return () => unsubscribe();
+        return () => unsubscribe();
     } catch (error) {
-      console.error("Firebase initialization failed:", error);
-      setMessage({ text: 'Fehler beim Initialisieren der Datenbank. Bitte versuchen Sie es später erneut.', type: 'error' });
-      setLoading(false);
+        console.error("Firebase initialization failed:", error);
+        setMessage({ text: 'Fehler beim Initialisieren der Datenbank. Bitte versuchen Sie es später erneut.', type: 'error' });
+        setLoading(false);
     }
-  }, []);
+}, []);
+
 
   // Fetch data from Firestore when auth is ready or week changes
   useEffect(() => {
@@ -322,7 +315,7 @@ useEffect(() => {
 
     const weekId = formatDate(currentWeekMonday);
     const docRef = doc(db, `users/${userId}/shift_plans`, weekId);
-    const employeesDocRef = doc(db, `artifacts/${__app_id}/users/${userId}/employee_list`, 'employees');
+    const employeesDocRef = doc(db, `users/${userId}/employee_list`, 'employees');
 
     setLoading(true);
 
@@ -369,7 +362,7 @@ useEffect(() => {
 
     const weekId = formatDate(currentWeekMonday);
     const docRef = doc(db, `users/${userId}/shift_plans`, weekId);
-    const employeesDocRef = doc(db, `artifacts/${__app_id}/users/${userId}/employee_list`, 'employees');
+    const employeesDocRef = doc(db, `users/${userId}/employee_list`, 'employees');
 
     // Save weekly schedule
     const saveSchedule = async () => {
